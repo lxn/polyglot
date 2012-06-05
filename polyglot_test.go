@@ -68,6 +68,9 @@ func Test_Translation(t *testing.T) {
 		{"en", "Exit", []string{"menu"}, "Exit"},
 		{"fr", "Exit", []string{"menu"}, "Exit"},
 		{"it_IT", "Exit", []string{"menu"}, "Exit"},
+		{"de", "Apricot", nil, "Aprikose"},
+		{"de_AT", "Apricot", nil, "Marille"},
+		{"de_DE", "Apricot", nil, "Aprikose"},
 	}
 
 	for _, d := range data {
