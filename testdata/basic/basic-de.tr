@@ -1,0 +1,1 @@
+{"Messages":[{"Locations":[{"File":"../main.go","Line":"30"}],"Source":"Hello","Context":null,"Translation":"Hallo"},{"Locations":[{"File":"../main.go","Line":"123"}],"Source":"Exit","Context":["noun"],"Translation":"Ausgang"},{"Locations":[{"File":"../main.go","Line":"456"}],"Source":"Exit","Context":["menu"],"Translation":"Beenden"}]}

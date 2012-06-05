@@ -29,7 +29,7 @@ func Test_NewDict(t *testing.T) {
 	}
 
 	for _, d := range data {
-		dict, err := NewDict("testdata/hello", d.locale)
+		dict, err := NewDict("testdata/basic", d.locale)
 
 		if dict == nil && d.expValidDict {
 			t.Errorf("Expected valid dict for locale '%s'", d.locale)
@@ -43,6 +43,44 @@ func Test_NewDict(t *testing.T) {
 			} else {
 				t.Errorf("Expected '%v' error for locale '%s', but got '%v'", d.expErr, d.locale, err)
 			}
+		}
+	}
+}
+
+func Test_Translation(t *testing.T) {
+	type test struct {
+		locale   string
+		source   string
+		context  []string
+		expTrans string
+	}
+
+	data := []test{
+		{"de", "Hello", nil, "Hallo"},
+		{"de_DE", "Hello", nil, "Hallo"},
+		{"es", "Hello", nil, "Hello"},
+		{"de", "Hello", []string{"blah"}, "Hello"},
+		{"de_DE", "Hello", []string{"blah"}, "Hello"},
+		{"de", "Exit", []string{"noun"}, "Ausgang"},
+		{"de_DE", "Exit", []string{"noun"}, "Ausgang"},
+		{"de", "Exit", []string{"menu"}, "Beenden"},
+		{"de_DE", "Exit", []string{"menu"}, "Beenden"},
+		{"en", "Exit", []string{"menu"}, "Exit"},
+		{"fr", "Exit", []string{"menu"}, "Exit"},
+		{"it_IT", "Exit", []string{"menu"}, "Exit"},
+	}
+
+	for _, d := range data {
+		dict, err := NewDict("testdata/basic", d.locale)
+
+		if err != nil {
+			t.Errorf("NewDict failed for locale '%s' with error %s", d.locale, err)
+		}
+
+		trans := dict.Translation(d.source, d.context...)
+
+		if trans != d.expTrans {
+			t.Errorf("Expected '%s' for locale '%s' and source '%s', but got '%s'", d.expTrans, d.locale, d.source, trans)
 		}
 	}
 }
