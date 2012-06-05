@@ -20,7 +20,7 @@ import (
 
 var baseName *string = flag.String("name", "", "The base name to use for translation files.")
 var directoryPath *string = flag.String("dir", "", "The directory path where to recursively search for Go files.")
-var locales *string = flag.String("locales", "", `Comma-separated list of locales, for which to generate or update tr files. e.g.: "de-AT,de-DE,de,es,fr,it".`)
+var locales *string = flag.String("locales", "", `Comma-separated list of locales, for which to generate or update tr files. e.g.: "de_AT,de_DE,de,es,fr,it".`)
 
 func logFatal(err error) {
 	log.Fatalf(`An error occurred: %s
@@ -191,7 +191,7 @@ func main() {
 	for _, loc := range locs {
 		loc = strings.TrimSpace(loc)
 
-		filePath := fmt.Sprintf("%s_%s.tr", *baseName, loc)
+		filePath := fmt.Sprintf("%s-%s.tr", *baseName, loc)
 
 		oldSourceKey2Message := readOldSourceKey2MessageFromTRFile(filePath)
 		writeTRFile(filePath, v.sourceKey2Message, oldSourceKey2Message, loc)

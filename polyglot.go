@@ -43,8 +43,8 @@ type Dict struct {
 // The directory will be scanned recursively for JSON encoded .tr translation 
 // files, as created by the polyglot tool, that have a name suffix matching one 
 // of the locales in the locale chain.
-// Example: Locale "en-US" has chain ["en-US", "en"], so files like
-// foo_en-US.tr, foo_en.tr, bar_en.tr, baz_en.tr would be picked up.
+// Example: Locale "en_US" has chain ["en_US", "en"], so files like
+// foo-en_US.tr, foo-en.tr, bar-en.tr, baz-en.tr would be picked up.
 func NewDict(translationsDirPath, locale string) (*Dict, error) {
 	locales := localesChainForLocale(locale)
 	if len(locales) == 0 {
@@ -155,7 +155,7 @@ func (d *Dict) loadTranslations(dirPath string) error {
 
 func (d *Dict) matchingLocaleFromFileName(name string) string {
 	for _, locale := range d.locales {
-		if strings.HasSuffix(name, fmt.Sprintf("_%s.tr", locale)) {
+		if strings.HasSuffix(name, fmt.Sprintf("-%s.tr", locale)) {
 			return locale
 		}
 	}
@@ -172,15 +172,33 @@ func sourceKey(source string, context []string) string {
 }
 
 func localesChainForLocale(locale string) []string {
-	// FIXME: Do something more sophisticated here 
-
-	if locale == "" {
+	parts := strings.Split(locale, "_")
+	if len(parts) > 2 {
 		return nil
 	}
 
-	parts := strings.Split(locale, "-")
+	if len(parts[0]) != 2 {
+		return nil
+	}
+
+	for _, r := range parts[0] {
+		if r < rune('a') || r > rune('z') {
+			return nil
+		}
+	}
+
 	if len(parts) == 1 {
 		return []string{parts[0]}
+	}
+
+	if len(parts[1]) < 2 || len(parts[1]) > 3 {
+		return nil
+	}
+
+	for _, r := range parts[1] {
+		if r < rune('A') || r > rune('Z') {
+			return nil
+		}
 	}
 
 	return []string{locale, parts[0]}
