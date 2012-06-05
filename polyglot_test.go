@@ -32,11 +32,13 @@ func Test_NewDict(t *testing.T) {
 		dict, err := NewDict("testdata/hello", d.locale)
 
 		if dict == nil && d.expValidDict {
-			t.Errorf("Expected nil dict for locale '%s'", d.locale)
+			t.Errorf("Expected valid dict for locale '%s'", d.locale)
 		}
 
 		if err != d.expErr {
 			if err == nil {
+				t.Errorf("Expected '%v' error for locale '%s', but got nil", d.expErr, d.locale)
+			} else if d.expErr == nil {
 				t.Errorf("Expected no error for locale '%s', but got '%v'", d.locale, err)
 			} else {
 				t.Errorf("Expected '%v' error for locale '%s', but got '%v'", d.expErr, d.locale, err)
